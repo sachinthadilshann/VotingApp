@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "247709695644",
+    "project_id": "voting-app-62e43",
+    "storage_bucket": "voting-app-62e43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247709695644:android:d4dbd6cf5f0b473bccf759",
+        "android_client_info": {
+          "package_name": "com.radproject.votingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "247709695644-uhkouqu7d4npact5vfvslratjdsauc94.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-Q6gHKzaztPMlfCr8XW-82l1OTMLbIyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "247709695644-uhkouqu7d4npact5vfvslratjdsauc94.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
