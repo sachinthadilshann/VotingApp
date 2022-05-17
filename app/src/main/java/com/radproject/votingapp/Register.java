@@ -21,6 +21,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Register extends AppCompatActivity {
 
@@ -30,7 +35,7 @@ public class Register extends AppCompatActivity {
     TextView mLoginBtn;
     FirebaseAuth fAuth;
     ProgressBar progressBar;
-    // FirebaseFirestore fStore;
+    FirebaseFirestore fStore;
     String userID;
 
     @Override
@@ -45,7 +50,7 @@ public class Register extends AppCompatActivity {
         mRegisterBtn= findViewById(R.id.registerBtn);
         mLoginBtn   = findViewById(R.id.createText);
         fAuth = FirebaseAuth.getInstance();
-        //fStore = FirebaseFirestore.getInstance();
+        fStore = FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.progressBar);
 
         if(fAuth.getCurrentUser() !=null){
@@ -96,8 +101,31 @@ public class Register extends AppCompatActivity {
                                 }
                             });
 
+                            Toast.makeText(Register.this,"USER CREATED",Toast.LENGTH_SHORT).show();
+                            userID = fAuth.getCurrentUser().getUid();
+                            DocumentReference documentReference = fStore.collection("users").document(userID);
+                            Map<String,Object> user = new HashMap<>();
+                            user.put("fName",fullName);
+                            user.put("email",email);
+                            user.put("phone",phone);
+                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(TAG,"onSuccess: user Profile is created for "+userID);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "onFailure: " + e.toString());
 
 
+                                }
+                            });
+
+                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        }else {
+                            Toast.makeText(Register.this,"Error !"+task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
                         }
                     }
                 });
