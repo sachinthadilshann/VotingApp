@@ -93,12 +93,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        mCreateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),Register.class));
-            }
-        });
+
 
         forgotTextLink.setOnClickListener(new View.OnClickListener() {
             @Override
