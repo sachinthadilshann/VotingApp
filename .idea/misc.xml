@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.20625" />
         <entry key="..\:/Users/acer/AndroidStudioProjects/VotingApp/app/src/main/res/drawable/btn_style.xml" value="0.1" />
         <entry key="..\:/Users/acer/AndroidStudioProjects/VotingApp/app/src/main/res/drawable/edit_text_style.xml" value="0.159" />
         <entry key="..\:/Users/acer/AndroidStudioProjects/VotingApp/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.1255" />
@@ -15,8 +16,10 @@
         <entry key="..\:/Users/acer/AndroidStudioProjects/VotingApp/app/src/main/res/layout/activity_register.xml" value="0.264" />
         <entry key="..\:/Users/acer/AndroidStudioProjects/VotingApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.124" />
         <entry key="..\:/Users/acer/AndroidStudioProjects/VotingApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.124" />
+        <entry key="app/src/main/res/layout/activity_create_poll.xml" value="0.17864583333333334" />
         <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.35052083333333334" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.17760416666666667" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.17760416666666667" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.35052083333333334" />
       </map>
     </option>
