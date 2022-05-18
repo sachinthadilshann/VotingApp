@@ -23,6 +23,7 @@
         app:layout_constraintTop_toBottomOf="@+id/resetPasswordLocal"
         tools:ignore="OnClick" />
 
+
     <ImageView
         android:id="@+id/profileImage"
         android:layout_width="150dp"
@@ -202,6 +203,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profilePhone"
         app:layout_constraintVertical_bias="0.402" />
+
+    <Button
+        android:id="@+id/admin_btn"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Create Candidate"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/changeProfile"
+        app:layout_constraintEnd_toEndOf="@+id/changeProfile"
+        app:layout_constraintStart_toStartOf="@+id/changeProfile"
+        app:layout_constraintTop_toBottomOf="@+id/profilePhone" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

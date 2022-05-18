@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore fStore;
     String userId;
     Button resendCode;
-    Button resetPassLocal,changeProfileImage;
+    Button resetPassLocal,changeProfileImage, adminPanel;
     FirebaseUser user;
     ImageView profileImage;
     StorageReference storageReference;
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         resetPassLocal = findViewById(R.id.resetPasswordLocal);
         profileImage = findViewById(R.id.profileImage);
         changeProfileImage = findViewById(R.id.changeProfile);
+        adminPanel = findViewById(R.id.admin_btn);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -168,6 +169,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
 
 
+            }
+        });
+
+        adminPanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ap = new Intent(v.getContext(),CreatePoll.class);
+                startActivity(ap);
             }
         });
 
