@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -36,26 +37,26 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CreatePoll extends AppCompatActivity {
 
-    private CircleImageView candidateImage;
     private EditText candidateName, candidateParty;
     private Spinner candidateSpinner;
     private Button submitBtn;
     private Uri mainUri = null;
     private String [] election = {"President", "Parliament", "Municipal Council", "Urban Council", "Pradeshiya Sabha"};
-    private FirebaseAuth fAuth;
-    private FirebaseFirestore fStore;
-    private FirebaseUser user;
-    private StorageReference storageReference;
+    private StorageReference reference;
+    private FirebaseFirestore firebaseFiretore;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_poll);
 
-        fStore = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
+        Intent data = getIntent();
 
-        candidateImage = findViewById(R.id.candidate_image);
+        reference = FirebaseStorage.getInstance().getReference();
+        firebaseFiretore = FirebaseFirestore.getInstance();
+
+
         candidateName = findViewById(R.id.candidate_name);
         candidateParty = findViewById(R.id.candidate_party);
         candidateSpinner = findViewById(R.id.candidate_spinner);
@@ -65,13 +66,7 @@ public class CreatePoll extends AppCompatActivity {
 
         candidateSpinner.setAdapter(adapter);
 
-        candidateImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(openGalleryIntent,1000);
-            }
-        });
+
 
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,12 +80,12 @@ public class CreatePoll extends AppCompatActivity {
 
                     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                    StorageReference imagepath = storageReference.child("candidate_image").child(uid + ".jpg");
-                    imagepath.putFile(mainUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    StorageReference imagePath = reference.child("candidate_image").child(uid + ".jpg");
+                    imagePath.putFile(mainUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                             if(task.isSuccessful()){
-                                imagepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                imagePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         Map<String, Object> map = new HashMap<>();
@@ -100,12 +95,11 @@ public class CreatePoll extends AppCompatActivity {
                                         map.put("image", uri.toString());
                                         map.put("timestamp", FieldValue.serverTimestamp());
 
-                                        fStore.collection("Candidate")
-                                                .document(uid)
-                                                .set(map)
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        firebaseFiretore.collection("Candidate")
+                                                .add(map)
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                                     @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                    public void onComplete(@NonNull Task<DocumentReference> task) {
                                                         if(task.isSuccessful()){
                                                             startActivity(new Intent(CreatePoll.this, MainActivity.class));
                                                             finish();
@@ -132,38 +126,7 @@ public class CreatePoll extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1000){
-            if(resultCode == Activity.RESULT_OK){
-                Uri imageUri = data.getData();
-                uploadImageToFirebase(imageUri);
 
 
-            }
-        }
 
-    }
-
-    private void uploadImageToFirebase(Uri imageUri) {
-        final StorageReference fileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile.jpg");
-        fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Picasso.get().load(uri).into(candidateImage);
-                    }
-                });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Failed.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
 }

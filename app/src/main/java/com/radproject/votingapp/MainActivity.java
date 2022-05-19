@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         phone = findViewById(R.id.profilePhone);
         fullName = findViewById(R.id.profileName);
         email    = findViewById(R.id.profileEmail);
@@ -175,8 +176,7 @@ public class MainActivity extends AppCompatActivity {
         adminPanel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent ap = new Intent(v.getContext(),CreatePoll.class);
-                startActivity(ap);
+                startActivity(new Intent(MainActivity.this,CreatePoll.class));
             }
         });
 
