@@ -139,15 +139,11 @@ public class CreatePoll extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1000){
             if(resultCode == Activity.RESULT_OK){
-                Uri mainUri = data.getData();
+                mainUri = data.getData();
             }
         }
 
     }
-
-    }
-
-
 
 
 }
