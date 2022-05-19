@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CreatePoll extends AppCompatActivity {
 
+    private ImageView candidateImage;
     private EditText candidateName, candidateParty;
     private Spinner candidateSpinner;
     private Button submitBtn;
@@ -56,7 +58,7 @@ public class CreatePoll extends AppCompatActivity {
         reference = FirebaseStorage.getInstance().getReference();
         firebaseFiretore = FirebaseFirestore.getInstance();
 
-
+        candidateImage = findViewById(R.id.candidate_image);
         candidateName = findViewById(R.id.candidate_name);
         candidateParty = findViewById(R.id.candidate_party);
         candidateSpinner = findViewById(R.id.candidate_spinner);
@@ -66,7 +68,13 @@ public class CreatePoll extends AppCompatActivity {
 
         candidateSpinner.setAdapter(adapter);
 
-
+        candidateImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(openGalleryIntent,1000);
+            }
+        });
 
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +131,19 @@ public class CreatePoll extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1000){
+            if(resultCode == Activity.RESULT_OK){
+                Uri mainUri = data.getData();
+            }
+        }
+
+    }
 
     }
 
