@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore fStore;
     String userId;
     Button resendCode;
-    Button resetPassLocal,changeProfileImage, adminPanel;
+    Button resetPassLocal,changeProfileImage, adminPanel, startVotingBtn, voteBtn;
     FirebaseUser user;
     ImageView profileImage;
     StorageReference storageReference;
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         profileImage = findViewById(R.id.profileImage);
         changeProfileImage = findViewById(R.id.changeProfile);
         adminPanel = findViewById(R.id.admin_btn);
+        startVotingBtn = findViewById(R.id.start_voting);
+        voteBtn = findViewById(R.id.view_poll_btn);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -180,6 +184,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        startVotingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, AllCandidateActivity.class));
+            }
+        });
+
 
     }
 
@@ -189,5 +200,21 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.show_result:
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

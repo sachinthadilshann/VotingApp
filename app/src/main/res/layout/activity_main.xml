@@ -72,6 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:text="Phone Number"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -211,10 +212,40 @@
         android:layout_height="wrap_content"
         android:text="Create Candidate"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/changeProfile"
-        app:layout_constraintEnd_toEndOf="@+id/changeProfile"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/resetPasswordLocal"
         app:layout_constraintStart_toStartOf="@+id/changeProfile"
-        app:layout_constraintTop_toBottomOf="@+id/profilePhone" />
+        app:layout_constraintTop_toBottomOf="@+id/profilePhone"
+        app:layout_constraintVertical_bias="0.402" />
+
+    <Button
+        android:id="@+id/start_voting"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Start Voting"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/admin_btn"
+        app:layout_constraintStart_toEndOf="@+id/admin_btn"
+        app:layout_constraintTop_toTopOf="@+id/admin_btn"
+        app:layout_constraintVertical_bias="0.402" />
+
+    <Button
+        android:id="@+id/view_poll_btn"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Give Vote"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/admin_btn"
+        app:layout_constraintStart_toEndOf="@+id/admin_btn"
+        app:layout_constraintTop_toTopOf="@+id/admin_btn"
+        app:layout_constraintVertical_bias="0.402" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

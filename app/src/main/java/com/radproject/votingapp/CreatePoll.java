@@ -88,7 +88,7 @@ public class CreatePoll extends AppCompatActivity {
 
                     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                    StorageReference imagePath = reference.child("candidate_image").child(uid + ".jpg");
+                    StorageReference imagePath = reference.child("candidate_image").child(party + ".jpg");
                     imagePath.putFile(mainUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
