@@ -7,6 +7,7 @@ public class Candidate {
     String election;
     String image;
     String id;
+    int count = 0;
 
     public Candidate(String name, String party, String election, String image, String id) {
         this.name = name;
@@ -14,6 +15,14 @@ public class Candidate {
         this.election = election;
         this.image = image;
         this.id = id;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     public String getId() {

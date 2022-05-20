@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardCornerRadius="8dp"
     android:layout_margin="16dp"
+    android:padding="16dp"
     app:cardElevation="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img"
@@ -58,17 +60,20 @@
         app:layout_constraintStart_toStartOf="@+id/party"
         app:layout_constraintTop_toBottomOf="@+id/party" />
 
-    <!--<Button
-        android:id="@+id/vote_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:layout_margin="16dp"
-        android:text="Vote"
-        android:backgroundTint="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/party"
-        app:layout_constraintStart_toStartOf="@+id/party"
-        app:layout_constraintTop_toBottomOf="@+id/party" />-->
+        <TextView
+            android:id="@+id/candidate_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:padding="8dp"
+            android:text="Result : 0"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="@+id/election"
+            app:layout_constraintStart_toStartOf="@+id/election"
+            app:layout_constraintTop_toBottomOf="@+id/election" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -101,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             });
+        }else{
+            voteBtn.setVisibility(View.VISIBLE);
+
         }
 
 
@@ -192,6 +195,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        voteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, AllCandidateActivity.class));
+            }
+        });
     }
 
     public void logout(View view) {
@@ -212,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
         switch (id){
             case R.id.show_result:
 
+                startActivity(new Intent(MainActivity.this,ResultActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
