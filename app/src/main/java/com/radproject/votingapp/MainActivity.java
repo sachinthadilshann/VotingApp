@@ -102,8 +102,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }else{
-            voteBtn.setVisibility(View.VISIBLE);
 
+            if (userId.equals("BiFYwW7EjHOSGSrPn1fXi6wOxLP2") || userId.equals("LcCdgWcpBCejWQ3iazrpNcmg86x1")){
+                adminPanel.setVisibility(View.VISIBLE);
+                startVotingBtn.setVisibility(View.VISIBLE);
+                voteBtn.setVisibility(View.GONE);
+            }else {
+                voteBtn.setVisibility(View.GONE);
+                adminPanel.setVisibility(View.GONE);
+                startVotingBtn.setVisibility(View.VISIBLE);
+            }
         }
 
 
