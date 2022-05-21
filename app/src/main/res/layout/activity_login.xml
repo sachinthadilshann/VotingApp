@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="Voting App"
         android:textStyle="bold"
-        android:textColor="#871313"
+        android:textColor="#FF0000"
         android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
