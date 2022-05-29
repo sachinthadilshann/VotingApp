@@ -43,6 +43,8 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+
+
         mFullName   = findViewById(R.id.fullName);
         mEmail      = findViewById(R.id.Email);
         mPassword   = findViewById(R.id.password);
@@ -145,4 +147,6 @@ mLoginBtn.setOnClickListener(new View.OnClickListener() {
     }
 });
     }
+
+
 }

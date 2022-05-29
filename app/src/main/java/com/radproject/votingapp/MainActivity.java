@@ -5,8 +5,10 @@ import static androidx.core.content.PackageManagerCompat.LOG_TAG;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +39,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
@@ -44,7 +47,7 @@ import javax.annotation.Nullable;
 
 public class MainActivity extends AppCompatActivity {
     private static final int GALLERY_INTENT_CODE = 1023 ;
-    TextView fullName,email,number,verifyMsg,phone;
+    TextView fullName,email,number,verifyMsg;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userId;
@@ -228,9 +231,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent galleryIntent = new Intent();
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
-                // We will be redirected to choose pdf
-                 galleryIntent.setType("image/*");
-                galleryIntent.setType("application/pdf");
+                galleryIntent.setType("image/*");
+                //galleryIntent.setType("application/pdf");
                 startActivityForResult(galleryIntent, 1);
             }
         });
@@ -243,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
 
-            // Here we are initialising the progress dialog box
+
             dialog = new ProgressDialog(this);
             dialog.setMessage("Uploading");
 
@@ -254,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
             final String messagePushID = timestamp;
             Toast.makeText(MainActivity.this, imageuri.toString(), Toast.LENGTH_SHORT).show();
 
-            final StorageReference filepath = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/document.pdf");
+            final StorageReference filepath = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/NIC.jpg");
             Toast.makeText(MainActivity.this, filepath.getName(), Toast.LENGTH_SHORT).show();
             filepath.putFile(imageuri).continueWithTask(new Continuation() {
                 @Override
@@ -315,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
 }
 
