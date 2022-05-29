@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,8 +16,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -29,16 +33,20 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 public class EditProfile extends AppCompatActivity {
 
     public static final String TAG = "TAG";
-    EditText profileFullName,profileEmail,profilePhone;
+    EditText profileFullName,profileEmail,profileNumber;
     ImageView profileImageView;
     Button saveBtn;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     FirebaseUser user;
     StorageReference storageReference;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +56,7 @@ public class EditProfile extends AppCompatActivity {
         Intent data = getIntent();
         final String fullName = data.getStringExtra("fullName");
         String email = data.getStringExtra("email");
-        String phone = data.getStringExtra("phone");
+        String number = data.getStringExtra("NIC");
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -57,9 +65,13 @@ public class EditProfile extends AppCompatActivity {
 
         profileFullName = findViewById(R.id.profileFullName);
         profileEmail = findViewById(R.id.profileEmailAddress);
-        profilePhone = findViewById(R.id.profilePhoneNo);
+        profileNumber = findViewById(R.id.profileIDNo);
         profileImageView = findViewById(R.id.profileImageView);
         saveBtn = findViewById(R.id.saveProfileInfo);
+
+
+
+
 
         StorageReference profileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -77,10 +89,12 @@ public class EditProfile extends AppCompatActivity {
             }
         });
 
+
+
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(profileFullName.getText().toString().isEmpty() || profileEmail.getText().toString().isEmpty() || profilePhone.getText().toString().isEmpty()){
+                if(profileFullName.getText().toString().isEmpty() || profileEmail.getText().toString().isEmpty() || profileNumber.getText().toString().isEmpty()){
                     Toast.makeText(EditProfile.this, "One or Many fields are empty.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -93,7 +107,7 @@ public class EditProfile extends AppCompatActivity {
                         Map<String,Object> edited = new HashMap<>();
                         edited.put("email",email);
                         edited.put("fName",profileFullName.getText().toString());
-                        edited.put("phone",profilePhone.getText().toString());
+                        edited.put("NIC",profileNumber.getText().toString());
                         docRef.update(edited).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -102,7 +116,7 @@ public class EditProfile extends AppCompatActivity {
                                 finish();
                             }
                         });
-                        Toast.makeText(EditProfile.this, "Email is changed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditProfile.this, "Updated.", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -117,10 +131,13 @@ public class EditProfile extends AppCompatActivity {
 
         profileEmail.setText(email);
         profileFullName.setText(fullName);
-        profilePhone.setText(phone);
+        profileNumber.setText(number);
 
-        Log.d(TAG, "onCreate: " + fullName + " " + email + " " + phone);
+        Log.d(TAG, "onCreate: " + fullName + " " + email + " " + number);
+
     }
+
+    ProgressDialog dialog;
 
 
     @Override
@@ -130,6 +147,8 @@ public class EditProfile extends AppCompatActivity {
             if(resultCode == Activity.RESULT_OK){
                 Uri imageUri = data.getData();
                 uploadImageToFirebase(imageUri);
+                dialog = new ProgressDialog(this);
+                dialog.setMessage("Uploading");
 
 
             }

@@ -30,7 +30,7 @@ import java.util.Map;
 public class Register extends AppCompatActivity {
 
     public static final String TAG = "TAG";
-    EditText mFullName,mEmail,mPassword,mPhone;
+    EditText mFullName,mEmail,mPassword,mNumber;
     Button mRegisterBtn;
     TextView mLoginBtn;
     FirebaseAuth fAuth;
@@ -46,7 +46,7 @@ public class Register extends AppCompatActivity {
         mFullName   = findViewById(R.id.fullName);
         mEmail      = findViewById(R.id.Email);
         mPassword   = findViewById(R.id.password);
-        mPhone      = findViewById(R.id.phone);
+        mNumber     = findViewById(R.id.number);
         mRegisterBtn= findViewById(R.id.registerBtn);
         mLoginBtn   = findViewById(R.id.createText);
         fAuth = FirebaseAuth.getInstance();
@@ -64,7 +64,7 @@ public class Register extends AppCompatActivity {
                 final String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 final String fullName = mFullName.getText().toString();
-                final String phone    = mPhone.getText().toString();
+                final String number   = mNumber.getText().toString();
 
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Email is Required.");
@@ -76,10 +76,15 @@ public class Register extends AppCompatActivity {
                     return;
                 }
 
-                if(password.length() < 6){
+                if(password.length() < 8){
                     mPassword.setError("Password Must be >= 8 Characters");
                     return;
                 }
+
+               if(TextUtils.isEmpty(number)){
+                   mNumber.setError("ID number is Required");
+                   return;
+               }
 
                 progressBar.setVisibility((View.VISIBLE));
 
@@ -107,7 +112,7 @@ public class Register extends AppCompatActivity {
                             Map<String,Object> user = new HashMap<>();
                             user.put("fName",fullName);
                             user.put("email",email);
-                            user.put("phone",phone);
+                            user.put("NIC",number);
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
