@@ -1,9 +1,14 @@
 package com.radproject.votingapp;
 
+import static androidx.core.content.PackageManagerCompat.LOG_TAG;
+
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +23,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -31,6 +39,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
@@ -38,15 +47,16 @@ import javax.annotation.Nullable;
 
 public class MainActivity extends AppCompatActivity {
     private static final int GALLERY_INTENT_CODE = 1023 ;
-    TextView fullName,email,phone,verifyMsg;
+    TextView fullName,email,number,verifyMsg;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userId;
-    Button resendCode;
+    Button resendCode,upload;
     Button resetPassLocal,changeProfileImage, adminPanel, startVotingBtn, voteBtn;
     FirebaseUser user;
     ImageView profileImage;
     StorageReference storageReference;
+    Uri imageuri = null;
 
 
     @Override
@@ -54,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        phone = findViewById(R.id.profilePhone);
-        fullName = findViewById(R.id.profileName);
+        number = findViewById(R.id.profileId);
+       fullName = findViewById(R.id.profileName);
         email    = findViewById(R.id.profileEmail);
         resetPassLocal = findViewById(R.id.resetPasswordLocal);
         profileImage = findViewById(R.id.profileImage);
@@ -65,7 +75,10 @@ public class MainActivity extends AppCompatActivity {
         voteBtn = findViewById(R.id.view_poll_btn);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+        upload = findViewById(R.id.uploadpdf);
+
         storageReference = FirebaseStorage.getInstance().getReference();
+
 
         StorageReference profileRef = storageReference.child("users/"+ Objects.requireNonNull(fAuth.getCurrentUser()).getUid()+"/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -105,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }else{
 
-            if (userId.equals("BiFYwW7EjHOSGSrPn1fXi6wOxLP2") || userId.equals("LcCdgWcpBCejWQ3iazrpNcmg86x1")){
+            if (userId.equals("BiFYwW7EjHOSGSrPn1fXi6wOxLP2") || userId.equals("LcCdgWcpBCejWQ3iazrpNcmg86x1") || userId.equals("fhce813hNvPDeYd9XYV2Hs0hTvM2") ){
                 adminPanel.setVisibility(View.VISIBLE);
                 startVotingBtn.setVisibility(View.VISIBLE);
                 voteBtn.setVisibility(View.GONE);
@@ -124,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(documentSnapshot.exists()){
-                    phone.setText(documentSnapshot.getString("phone"));
+                    number.setText(documentSnapshot.getString("NIC"));
                     fullName.setText(documentSnapshot.getString("fName"));
                     email.setText(documentSnapshot.getString("email"));
 
@@ -143,13 +156,13 @@ public class MainActivity extends AppCompatActivity {
 
                 final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
                 passwordResetDialog.setTitle("Reset Password ?");
-                passwordResetDialog.setMessage("Enter New Password > 6 Characters long.");
+                passwordResetDialog.setMessage("Enter New Password > 8 Characters long.");
                 passwordResetDialog.setView(resetPassword);
 
                 passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // extract the email and send reset link
+
                         String newPassword = resetPassword.getText().toString();
                         user.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -183,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(v.getContext(),EditProfile.class);
                 i.putExtra("fullName",fullName.getText().toString());
                 i.putExtra("email",email.getText().toString());
-                i.putExtra("phone",phone.getText().toString());
+                i.putExtra("NIC",number.getText().toString());
                 startActivity(i);
 
 
@@ -211,7 +224,74 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, AllCandidateActivity.class));
             }
         });
+
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+                galleryIntent.setType("image/*");
+                //galleryIntent.setType("application/pdf");
+                startActivityForResult(galleryIntent, 1);
+            }
+        });
     }
+
+    ProgressDialog dialog;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+
+
+            dialog = new ProgressDialog(this);
+            dialog.setMessage("Uploading");
+
+            dialog.show();
+            imageuri = data.getData();
+            final String timestamp = "" + System.currentTimeMillis();
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+            final String messagePushID = timestamp;
+            Toast.makeText(MainActivity.this, imageuri.toString(), Toast.LENGTH_SHORT).show();
+
+            final StorageReference filepath = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/NIC.jpg");
+            Toast.makeText(MainActivity.this, filepath.getName(), Toast.LENGTH_SHORT).show();
+            filepath.putFile(imageuri).continueWithTask(new Continuation() {
+                @Override
+                public Object then(@NonNull Task task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    return filepath.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+
+                        dialog.dismiss();
+                        Uri uri = task.getResult();
+                        String myurl;
+                        myurl = uri.toString();
+                        Toast.makeText(MainActivity.this, "Uploaded Successfully", Toast.LENGTH_SHORT).show();
+
+                        startVotingBtn.setVisibility(View.VISIBLE);
+                        voteBtn.setVisibility(View.GONE);
+                    } else {
+                        dialog.dismiss();
+                        Toast.makeText(MainActivity.this, "UploadedFailed", Toast.LENGTH_SHORT).show();
+                        voteBtn.setVisibility(View.GONE);
+                        startVotingBtn.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
+    }
+
+
+
 
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut();
@@ -237,4 +317,11 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 }
+
+
+
+
+

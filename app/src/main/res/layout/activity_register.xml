@@ -100,15 +100,15 @@
         app:layout_constraintTop_toBottomOf="@+id/Email" />
 
     <EditText
-        android:id="@+id/phone"
+        android:id="@+id/number"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/edit_text_style"
-        android:drawableLeft="@drawable/ic_baseline_smartphone_24"
+        android:drawableLeft="@drawable/ic_baseline_credit_card_24"
         android:ems="10"
-        android:hint="Phone"
+        android:hint="NIC Number"
         android:inputType="textPhonetic"
         android:padding="10dp"
         android:textColor="#000000"
@@ -132,7 +132,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phone" />
+        app:layout_constraintTop_toBottomOf="@+id/number" />
 
     <TextView
         android:id="@+id/createText"

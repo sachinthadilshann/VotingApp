@@ -3,9 +3,14 @@ package com.radproject.votingapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -14,16 +19,22 @@ import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.net.Uri;
+import android.content.pm.FeatureInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,6 +54,8 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
@@ -56,19 +69,26 @@ import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class VotingActivity extends AppCompatActivity {
+
 
     private CircleImageView image;
     private TextView name, party, election;
@@ -92,6 +112,9 @@ public class VotingActivity extends AppCompatActivity {
     float[][] ori_embedding = new float[1][128];
     float[][] test_embedding = new float[1][128];
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +135,8 @@ public class VotingActivity extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+
 
         String url = getIntent().getStringExtra("image");
         String nm = getIntent().getStringExtra("name");
@@ -370,6 +395,8 @@ public class VotingActivity extends AppCompatActivity {
             camera.release();
         }
 
+
+
     }
 
     private String getDevceIP() {
@@ -389,4 +416,10 @@ public class VotingActivity extends AppCompatActivity {
         }
         return null;
     }
+
+
+
+
+
+
 }
